@@ -22,6 +22,14 @@ Run application:
     $ docker run -p 5000:5000 pingit
 
 
+
+Resolve 127.0.0.1:5000 in Your browser to get into API documentation
+
+.. image:: static/swagger.png
+  :width: 1200
+  :alt: Swagger screenshot
+
+
 Usage examples:
 ---------------------
 
@@ -69,6 +77,6 @@ Hit ping endpint example:
 
 Stream response with *pingit* endpoint example:
 
-.. image:: static_files/pingit_endpoint_example.gif
+.. image:: static/pingit_endpoint_example.gif
   :width: 1200
   :alt: PingIt example GIF
