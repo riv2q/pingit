@@ -1,4 +1,4 @@
-from pingit import app
+from app import app
 
 
 def get_wsgi_application():
