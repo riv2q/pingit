@@ -2,10 +2,12 @@
 import json
 import logging
 import requests
+import time
 
 import validators
 from flask import Flask, Response, request
 from flask_restful import Resource, Api, reqparse, abort
+
 
 app = Flask(__name__)
 api = Api(app)
@@ -82,10 +84,46 @@ class Info(Resource):
         return response.make_conditional(request)
 
 
+class Pingit(Ping):
+    """Endpoint for pingit.
+
+    Endpoint created just for fun. Goal was to show connection time
+    and status code in few iterations in one request/response.
+    Using multipart response.
+    """
+
+    def ping_service_generator(self):
+        """Ganerate ping of the service response."""
+        session = requests.Session()
+        for round_number in range(10):
+            start_time = time.time()
+            response = session.get(self.url, verify=False)
+            end_time = time.time()
+            yield (
+                "{url} status={status} iter={number} "
+                "time={rtime:.3f} ms\r\n".format(
+                    url=self.url,
+                    status=response.status_code,
+                    rtime=end_time - start_time,
+                    number=round_number
+                )
+            )
+            time.sleep(1)
+        session.close()
+
+    def post(self):
+        """Handle 'GET' request."""
+        return Response(
+            self.ping_service_generator(),
+            mimetype='multipart/x-mixed-replace'
+        )
+
+
 # Assaign endpoints to the application
 api.add_resource(Home, '/')
 api.add_resource(Ping, '/ping')
 api.add_resource(Info, '/info')
+api.add_resource(Pingit, '/pingit')
 
 if __name__ == "__main__":
     app.run(debug=True)
