@@ -6,72 +6,53 @@ import time
 
 import validators
 from flask import Flask, Response, request
-from flask_restful import Resource, Api, reqparse, abort
+from flask_restful import reqparse, abort
+from flask_restful_swagger_3 import (
+    Api, Resource, swagger, get_swagger_blueprint)
 
 
 app = Flask(__name__)
-api = Api(app)
+api = Api(app, version='1.0', title="PingIt")
 
 log = logging.getLogger('pingit')
 
 
-class Home(Resource):
-    """Endpoint /"""
-
-    def get(self):
-        """Handle 'GET' request."""
-        message = json.dumps({'Message': 'Hello there!'})
-        response = Response(
-            response=message,
-            status=200,
-            mimetype="application/json"
-        )
-        response.add_etag()
-        return response.make_conditional(request)
-
-
-class Ping(Resource):
-    """Endpoint for ping."""
-
-    def __init__(self):
-        """Initialize request parser with proper arguments."""
-        # Describe arguments
-        request_parser = reqparse.RequestParser()
-        request_parser.add_argument(
-            'url',
-            type=str,
-            required=True,
-            help="parameter has not been specified"
-        )
-
-        # Collect arguments
-        arguments = request_parser.parse_args()
-
-        # Assaign arguments
-        self.url = arguments['url']
-
-        # Validate site argument
-        if validators.url(self.url) is not True:
-            error_msg = "site parameter is not valid"
-            log.error(error_msg)
-            abort(400, error=error_msg)
-        super(Ping, self).__init__()
-
-    def post(self):
-        """Handle 'POST' request."""
-        response = requests.get(self.url, verify=False)
-        response = Response(
-            response=response,
-            status=200,
-            mimetype="text/html"
-        )
-        response.add_etag()
-        return response.make_conditional(request)
-
-
+@swagger.tags('Endpoints')
 class Info(Resource):
     """Endpoint for info."""
 
+    @swagger.response(
+        response_code=200,
+        description="Returns simple static json",
+        no_content=True
+    )
+    @swagger.response(
+        response_code=304,
+        description="The page hasn't changed (ETag unchanged)",
+        no_content=True
+    )
+    @swagger.response(
+        response_code=412,
+        description=(
+            "Etag provided in the If-Match header does not match the "
+            "current ETag"
+        ),
+        no_content=True
+    )
+    @swagger.parameter(
+        _in='header',
+        name="If-None-Match",
+        description='Etag If-None-Match header',
+        schema={'type': 'string'},
+        required=False
+    )
+    @swagger.parameter(
+        _in='header',
+        name="If-Match",
+        description='Etag If-Match header',
+        schema={'type': 'string'},
+        required=False
+    )
     def get(self):
         """Handle 'GET' request."""
         message = json.dumps({'Receiver': 'Cisco is the best!'})
@@ -84,6 +65,54 @@ class Info(Resource):
         return response.make_conditional(request)
 
 
+@swagger.tags('Endpoints')
+class Ping(Resource):
+    """Endpoint for ping."""
+    post_parser = reqparse.RequestParser()
+    post_parser.add_argument(
+        'url',
+        type=str,
+        required=True,
+        help="parameter has not been specified",
+    )
+
+    def __init__(self):
+        """Initialize request parser with proper arguments."""
+        # Collect arguments
+        arguments = self.post_parser.parse_args()
+
+        # Assaign arguments
+        self.url = arguments['url']
+
+        # Validate site argument
+        if validators.url(self.url) is not True:
+            error_msg = "url parameter is not valid, provide http/https url"
+            log.error(error_msg)
+            abort(400, error=error_msg)
+        super(Ping, self).__init__()
+
+    @swagger.reqparser(name='url_parameter_ping', parser=post_parser)
+    @swagger.response(
+        description="Returns simple static json",
+        response_code=200,
+        no_content=True
+    )
+    @swagger.response(
+        response_code=400,
+        description="Bad Request",
+        no_content=True
+    )
+    def post(self):
+        """Handle 'POST' request."""
+        response = requests.get(self.url, verify=False)
+        return Response(
+            response=response,
+            status=200,
+            mimetype="text/html"
+        )
+
+
+@swagger.tags('Bonus - stream response example, use with curl')
 class Pingit(Ping):
     """Endpoint for pingit.
 
@@ -91,6 +120,13 @@ class Pingit(Ping):
     and status code in few iterations in one request/response.
     Using multipart response.
     """
+    post_parser = reqparse.RequestParser()
+    post_parser.add_argument(
+        'url',
+        type=str,
+        required=True,
+        help="parameter has not been specified"
+    )
 
     def ping_service_generator(self):
         """Ganerate ping of the service response."""
@@ -111,6 +147,17 @@ class Pingit(Ping):
             time.sleep(1)
         session.close()
 
+    @swagger.reqparser(name='url_parameter_pingit', parser=post_parser)
+    @swagger.response(
+        description="Returns simple static json",
+        response_code=200,
+        no_content=True
+    )
+    @swagger.response(
+        response_code=400,
+        description="Bad Request",
+        no_content=True
+    )
     def post(self):
         """Handle 'GET' request."""
         return Response(
@@ -120,10 +167,20 @@ class Pingit(Ping):
 
 
 # Assaign endpoints to the application
-api.add_resource(Home, '/')
 api.add_resource(Ping, '/ping')
 api.add_resource(Info, '/info')
 api.add_resource(Pingit, '/pingit')
+
+
+SWAGGER_URL = '/doc'  # URL for exposing Swagger UI (without trailing '/')
+API_URL = 'endpoints.json'  # Our API url (can of course be a local resource)
+
+swagger_blueprint = get_swagger_blueprint(
+    api.open_api_object,
+    swagger_prefix_url=SWAGGER_URL,
+    swagger_url=API_URL)
+app.register_blueprint(swagger_blueprint)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
