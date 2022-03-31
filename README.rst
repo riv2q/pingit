@@ -71,4 +71,4 @@ Stream response with *pingit* endpoint example:
 
 .. image:: static_files/pingit_endpoint_example.gif
   :width: 1200
-  :alt: Alternative text
+  :alt: PingIt example GIF
