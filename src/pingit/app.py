@@ -5,14 +5,12 @@ import requests
 import time
 
 import validators
-from flask import Flask, Response, request
+from flask import request, Response
 from flask_restful import reqparse, abort
-from flask_restful_swagger_3 import (
-    Api, Resource, swagger, get_swagger_blueprint)
+from flask_restful_swagger_3 import Resource, swagger, get_swagger_blueprint
 
-
-app = Flask(__name__)
-api = Api(app, version="1.0", title="PingIt")
+from pingit import app, api
+from pingit import commands
 
 log = logging.getLogger("pingit")
 

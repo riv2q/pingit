@@ -69,6 +69,6 @@ Hit ping endpint example:
 
 Stream response with *pingit* endpoint example:
 
-.. image:: static_files/pingit_endpoint_example.gif
+.. image:: src/static_files/pingit_endpoint_example.gif
   :width: 1200
   :alt: PingIt example GIF
