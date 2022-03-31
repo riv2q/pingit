@@ -67,8 +67,8 @@ Hit ping endpint example:
    <html><head><title>Error 403 - Forbidden</title><head><body><h1>Error 403 - Forbidden</h1><p>You don't have permission to access the requested resource. Please contact the web site owner for further assistance.</p></body></html>
 
 
-Stream response with *pingit* endpoint:
+Stream response with *pingit* endpoint example:
 
-.. image:: czonczita3.gif
+.. image:: static_files/pingit_endpoint_example.gif
   :width: 1200
   :alt: Alternative text
