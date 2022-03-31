@@ -29,24 +29,39 @@ Checking etag
 
 .. code:: bash
 
-   curl -i http://localhost:5000/
+   curl -i http://localhost:5000/info
    HTTP/1.1 200 OK
-   Server: Werkzeug/2.1.0 Python/3.9.2
-   Date: Thu, 31 Mar 2022 10:49:41 GMT
+   Server: Werkzeug/2.1.0 Python/3.7.0
+   Date: Thu, 31 Mar 2022 19:38:25 GMT
    Content-Type: application/json
-   Content-Length: 27
-   ETag: "190663285f8fdfa614e17a026609aa77015033e7"
-   Date: Thu, 31 Mar 2022 10:49:41 GMT
+   Content-Length: 34
+   ETag: "401f6fd4e83461d236a7399206c2e2d42e05f27b"
+   Date: Thu, 31 Mar 2022 19:38:25 GMT
 
+   {"Receiver": "Cisco is the best!"}
 
 Checking if etag works
 
 .. code:: bash
 
-   curl -i http://localhost:5000/ -H 'If-None-Match: 190663285f8fdfa614e17a026609aa77015033e7'
+   curl -i http://localhost:5000/info -H 'If-None-Match: 401f6fd4e83461d236a7399206c2e2d42e05f27b'                                                                                                                                                                       130 ↵
    HTTP/1.1 304 NOT MODIFIED
-   Server: Werkzeug/2.1.0 Python/3.9.2
-   Date: Thu, 31 Mar 2022 10:46:44 GMT
-   ETag: "190663285f8fdfa614e17a026609aa77015033e7"
-   Date: Thu, 31 Mar 2022 10:46:44 GMT
+   Server: Werkzeug/2.1.0 Python/3.7.0
+   Date: Thu, 31 Mar 2022 19:39:46 GMT
+   ETag: "401f6fd4e83461d236a7399206c2e2d42e05f27b"
+   Date: Thu, 31 Mar 2022 19:39:46 GMT
    Transfer-Encoding: chunked
+
+
+Hit ping endpint example:
+
+.. code:: bash
+
+   curl -i -X POST -H "content-type: application/json" -d '{"url": "http://foobar.com"}' http://localhost:5000/ping
+   HTTP/1.1 200 OK
+   Server: Werkzeug/2.1.0 Python/3.7.0
+   Date: Thu, 31 Mar 2022 19:40:50 GMT
+   Content-Type: text/html; charset=utf-8
+   Transfer-Encoding: chunked
+
+   <html><head><title>Error 403 - Forbidden</title><head><body><h1>Error 403 - Forbidden</h1><p>You don't have permission to access the requested resource. Please contact the web site owner for further assistance.</p></body></html>
