@@ -15,6 +15,12 @@ Installation is simple. Just run this command with *docker*:
 
     $ docker build --tag pingit .
 
+Run application:
+
+.. code:: bash
+
+    $ docker run -p 5000:5000 pingit
+
 To use, You have this endpoints:
 
 .. code:: bash
