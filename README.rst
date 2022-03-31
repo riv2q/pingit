@@ -69,8 +69,8 @@ Hit ping endpint example:
 
  Stream response with *pingit* endpoint:
 
-.. code:: bash
 
-   .. image:: czonczita3.gif
+
+.. image:: czonczita3.gif
   :width: 400
   :alt: Alternative text
