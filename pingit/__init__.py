@@ -1,0 +1,1 @@
+from pingit import cli

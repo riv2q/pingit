@@ -97,9 +97,14 @@ class Ping(Resource):
     )
     @swagger.response(
         response_code=400, description="Bad Request", no_content=True)
+    @swagger.response(
+        response_code=404, description="Not Found", no_content=True)
     def post(self):
         """Handle 'POST' request."""
-        response = requests.get(self.url, verify=False)
+        try:
+            response = requests.get(self.url, verify=False)
+        except requests.exceptions.ConnectionError:
+            abort(404, error="Not Found")
         return Response(response=response, status=200, mimetype="text/html")
 
 
