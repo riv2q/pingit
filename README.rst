@@ -43,6 +43,7 @@ set Flask_APP
 Avaliable flask commands:
 
 .. code:: bash
+
     run               Runs a development server.
     shell             Runs a shell in the app context.
     start-dev-server  Start development server.
