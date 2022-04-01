@@ -30,6 +30,48 @@ Resolve 127.0.0.1:5000 in Your browser to get into API documentation
   :alt: Swagger screenshot
 
 
+Simple CLI:
+---------------------
+
+set Flask_APP
+
+.. code:: bash
+
+    export FLASK_APP=app.py
+
+
+Avaliable flask commands:
+
+.. code:: bash
+  run               Runs a development server.
+  shell             Runs a shell in the app context.
+  start-dev-server  Start development server.
+  start-server      Start server.
+  stop-server       Stop server.
+
+
+Some examples:
+
+Start Development Server
+
+.. code:: bash
+
+    flask start-dev-server
+
+Start Server (using gunicorn)
+
+.. code:: bash
+
+    flask start-server
+
+Stop Server (kill gunicorn processes)
+
+.. code:: bash
+
+    flask stop-server
+
+
+
 Usage examples:
 ---------------------
 
