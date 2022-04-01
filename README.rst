@@ -30,7 +30,7 @@ Resolve 127.0.0.1:5000 in Your browser to get into API documentation
   :alt: Swagger screenshot
 
 
-Simple CLI:
+Simple CLI
 ---------------------
 
 set Flask_APP
@@ -43,11 +43,11 @@ set Flask_APP
 Avaliable flask commands:
 
 .. code:: bash
-  run               Runs a development server.
-  shell             Runs a shell in the app context.
-  start-dev-server  Start development server.
-  start-server      Start server.
-  stop-server       Stop server.
+    run               Runs a development server.
+    shell             Runs a shell in the app context.
+    start-dev-server  Start development server.
+    start-server      Start server.
+    stop-server       Stop server.
 
 
 Some examples:
@@ -72,7 +72,7 @@ Stop Server (kill gunicorn processes)
 
 
 
-Usage examples:
+Usage examples
 ---------------------
 
 Checking etag:
